@@ -1,86 +1,104 @@
 class Node {
-	Integer value;
-	Node next;
+    Integer value;
+    Node next;
 
-	Node(Integer value) {
-		this.value = value;
-		this.next = null;
-	}
+    Node(Integer value) {
+        this.value = value;
+        this.next = null;
+    }
 }
-
 
 class LinkedList {
 
-	private Node head;
+    private Node head;
 
-	public void insertAtHead(Integer value) {
-		Node newNode = new Node(value);
-		newNode.next = head;
-		head = newNode;
-	}
+    public void insertAtHead(Integer value) {
+        Node newNode = new Node(value);
+        newNode.next = head;
+        head = newNode;
+    }
 
-	public void LinkedListInsertAfter(Node previous, Node newNode) {
-		newNode.next = previous.next;
-		previous.next = newNode;
-	}
+    public void LinkedListInsertAfter(Node previous, Node newNode) {
+        if (previous == null) {
+            throw new IllegalArgumentException("previous no puede ser null");
+        }
+        newNode.next = previous.next;
+        previous.next = newNode;
+    }
 
-	public Node LinkedListLookUp(int elementNumber) {
+    public Node LinkedListLookUp(int elementNumber) {
+        if (elementNumber < 0) return null;
+        Node current = head;
+        int count = 0;
 
-		Node current = head;
-		int count = 0;
+        while (count < elementNumber && current != null) {
+            current = current.next;
+            count = count + 1;
+        }
 
-		while(count < elementNumber && current != null) {
+        return current;
+    }
 
-			current = current.next;
-			count = count + 1;
+    public void insertAtIndex(int index, int value) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Índice negativo: " + index);
+        }
 
-		}
+        // Special case inserting a new head node.
+        if (index == 0) {
+            insertAtHead(value);
+            return;
+        }
 
-		return current;
-	}
+        Node previous = LinkedListLookUp(index - 1);
 
+        if (previous == null) {
+            throw new IndexOutOfBoundsException("Índice fuera de rango: " + index);
+        }
 
-	public void printList() {
-		Node current = head;
-		while(current != null) {
-			System.out.print(current.value + "->");
-			current = current.next;
-		}
+        Node newNode = new Node(value);
+        LinkedListInsertAfter(previous, newNode);
+    }
 
-		System.out.print("/");
-	}
-
+    public void printList() {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.value + "->");
+            current = current.next;
+        }
+        System.out.print("/");
+    }
 }
 
 public class LinkedListDemo {
 
-	public static void main(String[] args) {
-		LinkedList list = new LinkedList();
-		list.insertAtHead(50);
-		list.insertAtHead(40);
-		list.insertAtHead(30);
-		list.insertAtHead(20);
-		list.insertAtHead(10);
+    public static void main(String[] args) {
+        LinkedList list = new LinkedList();
+        list.insertAtHead(50);
+        list.insertAtHead(40);
+        list.insertAtHead(30);
+        list.insertAtHead(20);
+        list.insertAtHead(10);
 
-		
+        list.printList();
+        System.out.println();
 
-		// 10->20->30->71->40->50->/
-		// head: 10
+        list.insertAtIndex(3, 71);
+        list.printList();
+        System.out.println();
 
+        list.insertAtIndex(6, 99);
+        list.printList();
+        System.out.println();
 
-		list.printList();
+        try {
+            list.insertAtIndex(100, 5);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Excepción esperada: " + e.getMessage());
+        }
+    }
+}
 
-		Node previous = list.LinkedListLookUp(2);
-		Node newNode = new Node(71);
-
-
-		list.LinkedListInsertAfter(previous, newNode);
-		list.printList();
-
-
-
-	}
-} 
 
 
 
